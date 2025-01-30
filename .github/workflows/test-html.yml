@@ -1,0 +1,26 @@
+name: Automated HTML Testing
+
+on: [push, pull_request]  # تشغيل الاختبارات عند رفع الكود أو عند طلب الدمج
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3  # تحميل الكود من المستودع
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'  # استخدام Node.js لتشغيل أدوات الاختبار
+
+      - name: Install dependencies
+        run: npm install -g htmlhint lighthouse  # تثبيت أدوات الاختبار
+
+      - name: Run HTMLHint
+        run: htmlhint "*.html"  # فحص جميع ملفات HTML بحثًا عن الأخطاء
+
+      - name: Run Lighthouse Performance Test
+        run: lighthouse https://example.com --output=json --output-path=report.json --chrome-flags="--headless"
+
